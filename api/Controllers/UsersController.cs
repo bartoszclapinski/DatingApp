@@ -7,26 +7,26 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
-{
-    private readonly AppDbContext _context;
+public class UsersController : ControllerBase {
+    
+    private readonly UsersController _usersController;
 
-    public UsersController(AppDbContext context)
+    public UsersController(UsersController usersController)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _usersController = usersController ?? throw new ArgumentNullException(nameof(usersController));
     }    
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
-        var users = await _context.Users.ToListAsync();
+        var users = await _usersController.GetUsers();
         return Ok(users);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<AppUser>> GetUser(Guid id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _usersController.GetUser(id);
         return Ok(user);
     }
 }

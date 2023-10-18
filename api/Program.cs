@@ -1,4 +1,5 @@
 using API.Data;
+using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+
 //  Database connection and data seeder
 builder.Services.AddDbContext<AppDbContext>
                 (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 builder.Services.AddScoped<DataSeeder>();
+
 
 // CORS
 builder.Services.AddCors(options =>
@@ -21,7 +24,6 @@ builder.Services.AddCors(options =>
         policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
     });
 });
-
 
 var app = builder.Build();
 

@@ -13,6 +13,14 @@ builder.Services.AddDbContext<AppDbContext>
                 (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 builder.Services.AddScoped<DataSeeder>();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+    });
+});
 
 
 var app = builder.Build();
@@ -24,6 +32,8 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
     seeder.Seed();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

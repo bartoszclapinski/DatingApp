@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUsersService, UsersService>();
+
+//  Dependency injection
 
 //  CORS with policy
 builder.Services.AddCors(options =>
@@ -18,15 +21,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 //  Database connection and data seeder
 builder.Services.AddDbContext<AppDbContext>
                 (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 builder.Services.AddScoped<DataSeeder>();
 
+<<<<<<< Updated upstream
 // Interfaces and services
 builder.Services.AddScoped<IUsersService, UsersService>();
 
+=======
+>>>>>>> Stashed changes
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

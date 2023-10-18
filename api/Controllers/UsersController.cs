@@ -1,5 +1,6 @@
 ﻿using API.Data;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,24 +10,24 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase {
     
-    private readonly UsersController _usersController;
+    private readonly IUsersService _usersService;
 
-    public UsersController(UsersController usersController)
+    public UsersController(IUsersService usersService)
     {
-        _usersController = usersController ?? throw new ArgumentNullException(nameof(usersController));
+        _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
     }    
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
-        var users = await _usersController.GetUsers();
+        var users = await _usersService.GetUsersAsync();
         return Ok(users);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<AppUser>> GetUser(Guid id)
     {
-        var user = await _usersController.GetUser(id);
+        var user = await _usersService.GetUserAsync(id);
         return Ok(user);
     }
 }

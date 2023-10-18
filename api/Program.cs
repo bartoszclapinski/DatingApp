@@ -9,6 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+//  CORS with policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+    });
+});
+
 
 //  Database connection and data seeder
 builder.Services.AddDbContext<AppDbContext>
@@ -27,6 +36,8 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
     seeder.Seed();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

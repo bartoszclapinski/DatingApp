@@ -3,6 +3,7 @@ using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,22 @@ public class AccountController : BaseApiController
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
+        return user;
+    }
+
+    [HttpPost("login")] // POST api/account/login
+    public async Task<ActionResult<AppUser>> Login (LoginDto loginDto)
+    {
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.UserName.ToLower());
+        if (user == null) return Unauthorized("Invalid username");
+        
+        using var hmac = new HMACSHA512(user.PasswordSalt);
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+        if (computedHash.Where((t, i) => t != user.PasswordHash[i]).Any())
+        {
+            return Unauthorized("Invalid password");
+        }
+        
         return user;
     }
     

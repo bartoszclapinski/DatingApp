@@ -7,8 +7,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+    <div class="collapse navbar-collapse" id="navbarCollapse" >
+      <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="loggedIn">
         <li class="nav-item">
           <a class="nav-link" href="#">Matches</a>
         </li>
@@ -18,8 +18,20 @@
         <li class="nav-item">
           <a class="nav-link" >Messages</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()">Logout</a>
+        </li>
       </ul>
-      <form #loginForm="ngForm" class="d-flex" (ngSubmit)="login()" autocomplete="off" >
+
+      <div class="dropdown" *ngIf="loggedIn">
+        <a href="" class="dropdown-toggle text-light">Welcome User</a>
+        <div class="dropdown-menu">
+          <a href="" class="dropdown-item">Edit Profile</a>
+          <a href="" class="dropdown-item">Logout</a>
+        </div>
+      </div>
+
+      <form *ngIf="!loggedIn" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()" autocomplete="off" >
         <input name="username" [(ngModel)]="model.username" class="form-control me-2" type="text" placeholder="Username">
         <input name="password" [(ngModel)]="model.password" class="form-control me-2" type="password" placeholder="Password" >
 

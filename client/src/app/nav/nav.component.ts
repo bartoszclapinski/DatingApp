@@ -1,37 +1,28 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AccountService} from "../_services/account.service";
+import {Observable, of} from "rxjs";
+import {User} from "../_models/user";
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavComponent {
+export class NavComponent implements OnInit{
     title = 'Dating App';
     model: any = {};
-    loggedIn: boolean = false;
-  constructor(private accountService: AccountService) { }
 
-  ngOnInit(): void {
-    this.getCurrentUser();
-  }
+  constructor(public accountService: AccountService) { }
 
-  getCurrentUser() {
-    this.accountService.currentUser$.subscribe({
-      next: user => this.loggedIn = !!user,
-      error: err => console.log(err),
-    });
-  }
+  ngOnInit(): void { }
 
   login() {
     this.accountService.login(this.model).subscribe(response => {
       console.log(response);
-      this.loggedIn = true;
     });
   }
 
   logout() {
     this.accountService.logout();
-    this.loggedIn = false;
   }
 }

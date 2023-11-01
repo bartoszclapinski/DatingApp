@@ -23,8 +23,8 @@ export class RegisterComponent implements OnInit{
         this.cancel();
       },
       error: error => {
-        this.toastr.error(error.error.errors[0]);
-        console.log(error.error.errors.Password[0]);
+        this.toastr.error(error.error);
+        console.log(error.error);
       }
     });
   }

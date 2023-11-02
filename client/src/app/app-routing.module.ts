@@ -3,14 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 import {HomeComponent} from "./home/home.component";
 import {MemberListComponent} from "./members/member-list/member-list.component";
 import {MessagesComponent} from "./messages/messages.component";
-import {authGuard} from "./_guards/auth.guard";
+import {AuthGuard} from "./_guards/auth.guard";
 
 const routes: Routes = [
   {path: "", component: HomeComponent},
-  {path: "members", component: MemberListComponent, canActivate: [authGuard]},
-  {path: "members/:id", component: MemberListComponent},
-  {path: "lists", component: MemberListComponent},
-  {path: "messages", component: MessagesComponent},
+  {path: '', runGuardsAndResolvers: "always", canActivate: [AuthGuard], children: [
+      {path: "members", component: MemberListComponent},
+      {path: "members/:id", component: MemberListComponent},
+      {path: "lists", component: MemberListComponent},
+      {path: "messages", component: MessagesComponent}
+    ]},
   {path: "**", component: HomeComponent, pathMatch: "full"}
 ];
 

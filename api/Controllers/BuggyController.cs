@@ -23,9 +23,17 @@ public class BuggyController : BaseApiController
     [HttpGet("not-found")]
     public async Task<ActionResult<string>> GetNotFound()
     {
-        var thing = await _context.Users.FindAsync(new Guid());
-        if (thing == null) return NotFound();
-        return Ok(thing);
+        try
+        {
+            var thing = await _context.Users.FindAsync(new Guid());
+            if (thing == null) return NotFound();
+            return Ok(thing);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, "Computer really says no!");
+        }
     }
     
     [HttpGet("server-error")]

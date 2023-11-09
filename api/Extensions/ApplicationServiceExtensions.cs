@@ -11,7 +11,9 @@ public static class ApplicationServiceExtensions
     {
         // DATABASE CONNECTION
         services.AddDbContext<AppDbContext>
-                        (options => options.UseSqlServer(config.GetConnectionString("DbConnection")));
+                        (options => options.UseSqlServer(
+                                        config.GetConnectionString("DbConnection"),
+                                        x => x.UseDateOnlyTimeOnly()));
         
         // CORS
         services.AddCors(options =>

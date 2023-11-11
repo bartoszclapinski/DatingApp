@@ -27,6 +27,7 @@ public static class ApplicationServiceExtensions
         // DEPENDENCY INJECTION
         services.AddScoped<IUsersService, UsersService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<DataSeeder>();
         
 

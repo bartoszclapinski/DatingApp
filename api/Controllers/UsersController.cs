@@ -10,24 +10,32 @@ namespace API.Controllers;
 [Authorize]
 public class UsersController : BaseApiController {
     
-    private readonly IUsersService _usersService;
+    private readonly IUserRepository _userRepository;
 
-    public UsersController(IUsersService usersService)
+    public UsersController(IUserRepository userRepository)
     {
-        _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
-    }    
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+    }
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
-        var users = await _usersService.GetUsersAsync();
+        var users = await _userRepository.GetUsersAsync();
         return Ok(users);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<AppUser>> GetUser(Guid id)
     {
-        var user = await _usersService.GetUserAsync(id);
+        var user = await _userRepository.GetUserByIdAsync(id);
         return Ok(user);
     }
+    
+    [HttpGet("{username}")]
+    public async Task<ActionResult<AppUser>> GetUser(string username)
+    {
+        var user = await _userRepository.GetUserByUserNameAsync(username);
+        return Ok(user);
+    }
+    
 }

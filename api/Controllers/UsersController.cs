@@ -26,14 +26,6 @@ public class UsersController : BaseApiController {
     {
         return Ok(await _userRepository.GetMembersAsync());
     }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<MemberDto>> GetUser(Guid id)
-    {
-        var user = await _userRepository.GetUserByIdAsync(id);
-        var userToReturn = _mapper.Map<MemberDto>(user);
-        return Ok(userToReturn);
-    }
     
     [HttpGet("{username}")]
     public async Task<ActionResult<MemberDto>> GetUser(string username)

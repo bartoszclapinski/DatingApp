@@ -3,11 +3,8 @@
     <h1>Your profile</h1>
   </div>
   <div class="col-8">
-    <div class="alert alert-info">
-      <p>
-        <strong>Information:</strong>
-        You have made changes. Any unsaved changes will be lost.
-      </p>
+    <div class="alert alert-info" *ngIf="editForm.dirty">
+      <p><strong>Information:</strong>You have made changes. Any unsaved changes will be lost.</p>
     </div>
   </div>
   <div class="col-4">
@@ -32,7 +29,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-success col-12">Save changes</button>
+        <button class="btn btn-success col-12" form="editForm" [disabled]="!editForm.dirty">Save changes</button>
       </div>
     </div>
   </div>
@@ -40,18 +37,18 @@
   <div class="col-8">
     <tabset class="member-tabset">
       <tab heading="About {{member.knownAs}}">
-        <form>
+        <form id="editForm" #editForm="ngForm" (ngSubmit)="updateMember()">
           <h4 class="mt-2">Description</h4>
           <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6"></textarea>
           <h4 class="mt-2">Looking for</h4>
           <textarea class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6"></textarea>
           <h4 class="mt-2">Interest</h4>
-          <textarea class="form-control" [(ngModel)]="member.interests" name="interest" rows="6"></textarea>
+          <textarea class="form-control" [(ngModel)]="member.interests" name="interests" rows="6"></textarea>
           <h4 class="mt-2">Location details</h4>
           <div class="d-flex flex-row align-items-center">
-            <label for="city">City: </label>
+            <label>City: </label>
             <input type="text" [(ngModel)]="member.city" name="city" class="form-control mx-2">
-            <label for="country">Country: </label>
+            <label>Country: </label>
             <input type="text" [(ngModel)]="member.country" name="country" class="form-control mx-2">
           </div>
         </form>

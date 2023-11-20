@@ -20,6 +20,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import {JwtInterceptor} from "./_interceptors/jwt.interceptor";
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import {GalleryComponent} from "ng-gallery";
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    GalleryComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

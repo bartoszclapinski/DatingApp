@@ -6,7 +6,7 @@
 }
 
 .nav-tabs > li.open, member-tabset > .nav-tabs > li:hover {
-  border-bottom: 4px solid olivedrab;
+  border-bottom: 4px solid #78c2ad;
 }
 
 .member-tabset > .nav-tabs > li.open > a, member-tabset > .nav-tabs > li:hover > a {
@@ -24,7 +24,7 @@
 }
 
 .member-tabset > .nav-tabs > li.active {
-  border-bottom: 4px solid olivedrab;
+  border-bottom: 4px solid #78c2ad;
   position: relative;
 }
 
@@ -47,4 +47,8 @@
 
 .nav-tabs {
   --bs-nav-tabs-border-width: 0;
+}
+
+.gallery {
+  height: 600px;
 }

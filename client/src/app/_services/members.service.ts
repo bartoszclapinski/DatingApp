@@ -35,6 +35,6 @@ export class MembersService {
         this.members[index] = {...this.members[index], ...member};
       })
     );
-  }
+  }   
 
 }

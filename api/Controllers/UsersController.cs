@@ -55,6 +55,7 @@ public class UsersController : BaseApiController {
         if (result.Error != null) return BadRequest(result.Error.Message);
         var photo = new Photo
         {
+            Id = new Guid(),
             Url = result.SecureUrl.AbsoluteUri,
             PublicId = result.PublicId
         };
@@ -65,7 +66,7 @@ public class UsersController : BaseApiController {
         user.Photos.Add(photo);
         if (await _userRepository.SaveAllAsync())
         {
-            return CreatedAtRoute("GetUser", new {username = user.UserName}, _mapper.Map<PhotoDto>(photo));
+            return _mapper.Map<PhotoDto>(photo);
         }
         return BadRequest("Problem adding photo.");
     }

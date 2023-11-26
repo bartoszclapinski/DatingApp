@@ -35,6 +35,10 @@ export class MembersService {
         this.members[index] = {...this.members[index], ...member};
       })
     );
-  }   
+  }
+
+  setMainPhoto(photoId: any){
+    return this.http.put(this.usersUrl + "/set-main-photo/" + photoId, {});
+  }
 
 }

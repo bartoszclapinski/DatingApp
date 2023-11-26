@@ -2,7 +2,12 @@
   <div class="col-2 mb-4" *ngFor="let photo of member.photos">
     <img src="{{photo.url}}" class="img-thumbnail mb-1" alt="{{member.knownAs}}">
     <div class="text-center">
-      <button class="btn btn-sm btn-outline-primary">Main</button>
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [disabled]="photo.isMain"
+        (click)="setMainPhoto(photo)"
+        [ngClass]="photo.isMain ? 'btn-success active' : 'btn-outline-success'"
+      >Main</button>
       <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
     </div>
   </div>

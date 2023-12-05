@@ -12,7 +12,7 @@ import {Pagination} from "../../_models/pagination";
 export class MemberListComponent implements OnInit {
   //members$: Observable<Member[]> | undefined;
   members: Member[] = [];
-  pagination: Pagination | undefined;
+  pagination: Pagination = {} as Pagination;
   pageNumber = 1;
   pageSize = 5;
 
@@ -32,5 +32,12 @@ export class MemberListComponent implements OnInit {
         }
       }
     })
+  }
+
+  pageChanged(event: any) {
+    if (this.pageNumber !== event.page) {
+      this.pageNumber = event.page;
+      this.loadMembers();
+    }
   }
 }

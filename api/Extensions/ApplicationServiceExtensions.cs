@@ -34,7 +34,8 @@ public static class ApplicationServiceExtensions
         services.AddScoped<DataSeeder>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
-
+        services.AddScoped<LogUserActivity>();
+        
         return services;
     }
 }

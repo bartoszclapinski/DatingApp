@@ -14,11 +14,15 @@ export class MembersService {
   usersUrl = this.baseUrl + "users";
   userUrl = this.usersUrl + "/";
   members: Member[] = [];
+  membersCache = new Map();
 
 
   constructor(private http: HttpClient) { }
 
   getMembers(userParams: UserParams) {
+    const response = this.membersCache.get(Object.values(userParams).join("-"));
+    if (response) return of(response);
+
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 
     params = params.append("minAge", userParams.minAge);
@@ -26,7 +30,12 @@ export class MembersService {
     params = params.append("gender", userParams.gender);
     params = params.append("orderBy", userParams.orderBy);
 
-    return this.getPaginatedResult<Member[]>(this.usersUrl, params);
+    return this.getPaginatedResult<Member[]>(this.usersUrl, params).pipe(
+      map(response => {
+        this.membersCache.set(Object.values(userParams).join("-"), response);
+        return response;
+      })
+    );
   }
 
   private getPaginatedResult<T>(url: string, params: HttpParams) {

@@ -29,13 +29,19 @@ public static class ApplicationServiceExtensions
         // DEPENDENCY INJECTION
         services.AddScoped<IUsersService, UsersService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPhotoService, PhotoService>();
+        
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ILikesRepository, LikesRepository>();
+        services.AddScoped<IMessageRepository, MessageRepository>();
+        
         services.AddScoped<DataSeeder>();
+        services.AddScoped<LogUserActivity>();
+        
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
-        services.AddScoped<LogUserActivity>();
-        services.AddScoped<ILikesRepository, LikesRepository>();
+        
+        
         
         return services;
     }

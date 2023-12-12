@@ -16,10 +16,27 @@
               (click)="loadLikes()">Members who like me</button>
     </div>
   </div>
-</div>
-
-<div class="row mt-3">
-  <div class="col-2" *ngFor="let member of members">
-    <app-member-card [member]="member"></app-member-card>
+  <div class="row mt-3">
+    <div class="col-2" *ngFor="let member of members">
+      <app-member-card [member]="member"></app-member-card>
+    </div>
   </div>
 </div>
+
+<div class="d-flex justify-content-center">
+  <pagination
+    [boundaryLinks]="true"
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    [maxSize]="10"
+    [(ngModel)]="pagination.currentPage"
+    (pageChanged)="pageChanged($event)"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;"
+  >
+  </pagination>
+</div>
+
+

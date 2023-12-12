@@ -8,6 +8,7 @@ import {UserParams} from "../_models/userParams";
 import {AccountService} from "./account.service";
 import {User} from "../_models/user";
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -90,6 +91,14 @@ export class MembersService {
 
   deletePhoto(photoId: any) {
     return this.http.delete(this.usersUrl + "/delete-photo/" + photoId);
+  }
+
+  addLike(username: string){
+    return this.http.post(this.baseUrl + "likes/" + username, {});
+  }
+
+  getLikes(predicate: string) {
+    return this.http.get(this.baseUrl + "likes?predicate=" + predicate);
   }
 
   private getPaginatedResult<T>(url: string, params: HttpParams) {

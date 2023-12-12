@@ -10,6 +10,7 @@ import {ServerErrorComponent} from "./errors/server-error/server-error.component
 import {MemberDetailsComponent} from "./members/member-details/member-details.component";
 import {MemberEditComponent} from "./members/member-edit/member-edit.component";
 import {preventUnsavedChangesGuard} from "./_guards/prevent-unsaved-changes.guard";
+import {ListsComponent} from "./lists/lists.component";
 
 const routes: Routes = [
   {path: "", component: HomeComponent},
@@ -17,7 +18,7 @@ const routes: Routes = [
       {path: "members", component: MemberListComponent},
       {path: "members/:username", component: MemberDetailsComponent},
       {path: "member/edit", component: MemberEditComponent, canDeactivate: [preventUnsavedChangesGuard]},
-      {path: "lists", component: MemberListComponent},
+      {path: "lists", component: ListsComponent},
       {path: "messages", component: MessagesComponent}
     ]},
   {path: "errors", component: TestErrorComponent},

@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -49,5 +50,18 @@ public class MessagesController : BaseApiController
         if (await _messageRepository.SaveAllAsync()) return Ok(_mapper.Map<MessageDto>(message));
         
         return BadRequest("Failed to send message");
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesForUser([FromQuery] MessageParams messageParams)
+    {
+        messageParams.UserName = User.GetUsername();
+        
+        var messages = await _messageRepository.GetMessagesForUser(messageParams);
+        
+        Response.AddPaginationsHeader(
+            new PaginationHeader(messages.CurrentPage, messages.PageSize, messages.TotalCount, messages.TotalPages));
+        
+        return messages;
     }
 }

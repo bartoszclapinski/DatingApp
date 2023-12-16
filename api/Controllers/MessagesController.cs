@@ -64,4 +64,11 @@ public class MessagesController : BaseApiController
         
         return messages;
     }
+    
+    [HttpGet("thread/{username}")]
+    public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
+    {
+        var currentUsername = User.GetUsername();
+        return Ok(await _messageRepository.GetMessageThread(currentUsername, username));
+    }
 }

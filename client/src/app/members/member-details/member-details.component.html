@@ -45,7 +45,7 @@
        <gallery *ngIf="photoTab.active" [items]="images"></gallery>
       </tab>
       <tab heading="Messages">
-        <p>Messages goes here</p>
+        <app-member-messages [username]="member.userName" ></app-member-messages>
       </tab>
     </tabset>
   </div>

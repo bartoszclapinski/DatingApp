@@ -6,13 +6,15 @@ import {CommonModule} from "@angular/common";
 import {TabsModule} from "ngx-bootstrap/tabs";
 import {GalleryItem, GalleryModule, ImageItem} from "ng-gallery";
 import {TimeagoModule} from "ngx-timeago";
+import {AppModule} from "../../app.module";
+import {MemberMessagesComponent} from "../member-messages/member-messages.component";
 
 @Component({
   selector: 'app-member-details',
   standalone: true,
   templateUrl: './member-details.component.html',
   styleUrls: ['./member-details.component.css'],
-  imports: [CommonModule, TabsModule, GalleryModule, TimeagoModule]
+  imports: [CommonModule, TabsModule, GalleryModule, TimeagoModule, MemberMessagesComponent]
 })
 export class MemberDetailsComponent implements OnInit {
   member: Member | undefined;

@@ -1,1 +1,36 @@
-<p *ngFor="let m of messages">{{m.content}}</p>
+<div class="card">
+
+  <div class="card-body">
+    <div *ngIf="messages.length === 0">No messages :(</div>
+    <ul *ngIf="messages.length > 0" class="chat">
+      <li *ngFor="let m of messages">
+        <div>
+          <span class="chat-img float-end">
+            <img src="{{m.senderPhotoUrl || './assets/user.png'}}" alt="image of user" class="rounded-circle">
+          </span>
+          <div class="chat-body">
+            <div class="header">
+              <small class="text-muted">
+                <span class="fa fa-clock-o">{{m.messageSent | timeago}}</span>
+                <span class="text-danger" *ngIf="!m.dateRead && m.senderUsername !== username">(unread)</span>
+                <span class="text-success" *ngIf="m.dateRead && m.senderUsername !== username">(read {{m.dateRead | timeago}})</span>
+              </small>
+            </div>
+            <p>{{m.content}}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-footer">
+    <form>
+      <div class="input-group">
+        <input type="text" class="form-control input-sm" placeholder="Send a private message">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

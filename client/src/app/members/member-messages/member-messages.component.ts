@@ -12,18 +12,12 @@ import {TimeagoModule} from "ngx-timeago";
   styleUrls: ['./member-messages.component.css']
 })
 export class MemberMessagesComponent implements OnInit{
+  @Input() messages: Message[] = [];
   @Input() username: string = "";
-  messages: Message[] = [];
-
-  constructor(private messageService: MessageService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.loadMessages();
   }
 
-  loadMessages() {
-    this.messageService.getMessageThread(this.username).subscribe({
-      next: messages => this.messages = messages
-    });
-  }
+
 }

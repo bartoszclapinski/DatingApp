@@ -2,15 +2,16 @@
 using System.Text;
 using System.Text.Json;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
 public class DataSeed
 {
-    public static async Task SeedData(AppDbContext context)
+    public static async Task SeedData(UserManager<AppUser> userManager)
     {
-        if (await context.Users.AnyAsync()) return;
+        if (await userManager.Users.AnyAsync()) return;
         
         var userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
         var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
@@ -18,12 +19,9 @@ public class DataSeed
         
         foreach (var user in users)
         {
-            user.Id = Guid.NewGuid();
             user.UserName = user.UserName.ToLower();
-            context.Users.Add(user);    
+            await userManager.CreateAsync(user, "Pa$$w0rd");
         }
-
-        await context.SaveChangesAsync();
 
     }
 }

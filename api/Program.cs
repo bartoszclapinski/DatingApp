@@ -1,6 +1,8 @@
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -36,7 +38,7 @@ try
 {
     var context = services.GetRequiredService<AppDbContext>();
     await context.Database.MigrateAsync();
-    //await DataSeed.SeedData(context);
+    await DataSeed.SeedData(services.GetRequiredService<UserManager<AppUser>>());
 }
 catch (Exception ex)
 {

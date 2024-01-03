@@ -15,13 +15,13 @@ namespace API.Controllers;
 
 public class AccountController : BaseApiController
 {
-    private readonly AppDbContext _context;
     private readonly ITokenService _tokenService;
     private readonly IMapper _mapper;
+    private readonly UserManager<AppUser> _userManager;
 
-    public AccountController(AppDbContext context, ITokenService tokenService, IMapper mapper)
+    public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
@@ -35,8 +35,8 @@ public class AccountController : BaseApiController
 
         user.UserName = registerDto.UserName.ToLower();
         
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         return new UserDto
         {
@@ -52,12 +52,15 @@ public class AccountController : BaseApiController
     public async Task<ActionResult<UserDto>> Login (LoginDto loginDto)
     {
 
-        var user = await _context.Users.
+        var user = await _userManager.Users.
                         Include(p => p.Photos).
                         SingleOrDefaultAsync(u => u.UserName == loginDto.UserName.ToLower());
         
         
         if (user == null) return Unauthorized("Invalid username");
+        
+        var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+        if (!result) return Unauthorized("Invalid password");
         
         return new UserDto
         {
@@ -71,6 +74,6 @@ public class AccountController : BaseApiController
     
     private async Task<bool> UserExists(string username)
     {
-        return await _context.Users.AnyAsync(x => x.UserName == username.ToLower());
+        return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
     }
 }

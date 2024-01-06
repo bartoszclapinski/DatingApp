@@ -32,6 +32,12 @@ public static class IdentityServiceExtensions
                             };
                         });
 
+        services.AddAuthorization(o =>
+        {
+            o.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+            o.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
+        });
+
         return services;
     }    
 }

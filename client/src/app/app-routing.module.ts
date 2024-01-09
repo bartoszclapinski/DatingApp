@@ -13,6 +13,7 @@ import {preventUnsavedChangesGuard} from "./_guards/prevent-unsaved-changes.guar
 import {ListsComponent} from "./lists/lists.component";
 import {resolve} from "@angular/compiler-cli";
 import {memberDetailedResolver} from "./_resolvers/member-detailed.resolver";
+import {AdminPanelComponent} from "./admin/admin-panel/admin-panel.component";
 
 const routes: Routes = [
   {path: "", component: HomeComponent},
@@ -21,7 +22,8 @@ const routes: Routes = [
       {path: "members/:username", component: MemberDetailsComponent, resolve: {member: memberDetailedResolver}},
       {path: "member/edit", component: MemberEditComponent, canDeactivate: [preventUnsavedChangesGuard]},
       {path: "lists", component: ListsComponent},
-      {path: "messages", component: MessagesComponent}
+      {path: "messages", component: MessagesComponent},
+      {path: "admin", component: AdminPanelComponent}
     ]},
   {path: "errors", component: TestErrorComponent},
   {path: "not-found", component: NotFoundComponent},

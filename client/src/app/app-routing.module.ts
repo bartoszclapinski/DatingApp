@@ -14,6 +14,7 @@ import {ListsComponent} from "./lists/lists.component";
 import {resolve} from "@angular/compiler-cli";
 import {memberDetailedResolver} from "./_resolvers/member-detailed.resolver";
 import {AdminPanelComponent} from "./admin/admin-panel/admin-panel.component";
+import {adminGuard} from "./_guards/admin.guard";
 
 const routes: Routes = [
   {path: "", component: HomeComponent},
@@ -23,7 +24,7 @@ const routes: Routes = [
       {path: "member/edit", component: MemberEditComponent, canDeactivate: [preventUnsavedChangesGuard]},
       {path: "lists", component: ListsComponent},
       {path: "messages", component: MessagesComponent},
-      {path: "admin", component: AdminPanelComponent}
+      {path: "admin", component: AdminPanelComponent, canActivate: [adminGuard]}
     ]},
   {path: "errors", component: TestErrorComponent},
   {path: "not-found", component: NotFoundComponent},

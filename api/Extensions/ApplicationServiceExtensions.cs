@@ -2,6 +2,7 @@
 using API.Helpers;
 using API.Interfaces;
 using API.Services;
+using API.SignalR;
 using CloudinaryDotNet;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<DataSeeder>();
         services.AddScoped<LogUserActivity>();
         services.AddSignalR();
+        services.AddSingleton<PresenceTracker>();
         
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));

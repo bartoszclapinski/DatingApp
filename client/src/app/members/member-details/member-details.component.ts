@@ -10,6 +10,7 @@ import {AppModule} from "../../app.module";
 import {MemberMessagesComponent} from "../member-messages/member-messages.component";
 import {MessageService} from "../../_services/message.service";
 import {Message} from "../../_modules/message";
+import {PresenceService} from "../../_services/presence.service";
 
 @Component({
   selector: 'app-member-details',
@@ -25,7 +26,11 @@ export class MemberDetailsComponent implements OnInit {
   activeTab?: TabDirective;
   messages: Message[] = [];
 
-  constructor(private memberService: MembersService, private route: ActivatedRoute, private messageService: MessageService) {
+  constructor(
+    private memberService: MembersService,
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    public presenceService: PresenceService) {
   }
 
   ngOnInit(): void {

@@ -14,10 +14,9 @@ import {FormsModule, NgForm} from "@angular/forms";
 })
 export class MemberMessagesComponent implements OnInit{
   @ViewChild('messageForm', {static: true}) messageForm?: NgForm;
-  @Input() messages: Message[] = [];
   @Input() username: string = "";
   messageContent: string = "";
-  constructor(private messageService: MessageService) { }
+  constructor(public messageService: MessageService) { }
 
   ngOnInit() {
   }
@@ -26,11 +25,12 @@ export class MemberMessagesComponent implements OnInit{
     if (!this.username) return;
     this.messageService.sendMessage(this.username, this.messageContent).subscribe({
       next: message => {
-        this.messages.push(message);
-        this.messageForm?.reset();
+        // this.messages.push(message);
+        // this.messageForm?.reset();
       }
     });
   }
 
 
+  protected readonly length = length;
 }

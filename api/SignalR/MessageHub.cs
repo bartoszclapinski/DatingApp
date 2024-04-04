@@ -15,12 +15,18 @@ public class MessageHub : Hub
     private readonly IMessageRepository _messageRepository;
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IHubContext<PresenceHub> _presenceHub;
 
-    public MessageHub(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper)
+    public MessageHub(
+                    IMessageRepository messageRepository, 
+                    IUserRepository userRepository, 
+                    IMapper mapper, 
+                    IHubContext<PresenceHub> presenceHub)
     {
         _messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _presenceHub = presenceHub ?? throw new ArgumentNullException(nameof(presenceHub));
     }
     
     public override async Task OnConnectedAsync()
@@ -64,6 +70,15 @@ public class MessageHub : Hub
         if (group.Connections.Any(c => c.Username == recipient.UserName))
         {
             message.DateRead = DateTime.UtcNow;
+        }
+        else
+        {
+            var connections = await PresenceTracker.GetConnectionsForUser(recipient.UserName);
+            if (connections != null)
+            {
+                await _presenceHub.Clients.Clients(connections)
+                                .SendAsync("NewMessageReceived", new { username = sender.UserName, sender.KnownAs });
+            }
         }
         
         _messageRepository.AddMessage(message);

@@ -109,4 +109,12 @@ public class MessageRepository : IMessageRepository
                         .Include(c => c.Connections)
                         .FirstOrDefaultAsync(g => g.Name == groupName);
     }
+    
+    public async Task<Group> GetGroupForConnection(string connectionId)
+    {
+        return await _context.Groups
+                        .Include(c => c.Connections)
+                        .Where(c => c.Connections.Any(x => x.ConnectionId == connectionId))
+                        .FirstOrDefaultAsync();
+    }
 }

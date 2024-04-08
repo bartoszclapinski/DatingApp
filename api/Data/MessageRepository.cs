@@ -53,20 +53,19 @@ public class MessageRepository : IMessageRepository
 
     public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
     {
-        var messages = await _context.Messages
-                        .Include(u => u.Sender).ThenInclude(p => p.Photos)
-                        .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-                        .Where(m => 
-                                        m.Recipient.UserName == currentUserName && 
+        var query = _context.Messages
+                        .Where(m =>
+                                        m.Recipient.UserName == currentUserName &&
                                         m.RecipientDeleted == false &&
-                                        m.Sender.UserName == recipientUserName || 
-                                        m.Recipient.UserName == recipientUserName && 
+                                        m.Sender.UserName == recipientUserName ||
+                                        m.Recipient.UserName == recipientUserName &&
                                         m.SenderDeleted == false &&
                                         m.Sender.UserName == currentUserName)
                         .OrderBy(m => m.MessageSent)
-                        .ToListAsync();
+                        .AsQueryable();
+                        
         
-        var unreadMessages = messages
+        var unreadMessages = query
                         .Where(m => m.DateRead == null && m.Recipient.UserName == currentUserName)
                         .ToList();
 
@@ -77,9 +76,9 @@ public class MessageRepository : IMessageRepository
                 message.DateRead = DateTime.UtcNow;
             }
         }
-        
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
-                      
+
+        return await query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider).ToListAsync();
+
     }
 
     public void AddGroup(Group group)

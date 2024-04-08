@@ -1,4 +1,6 @@
-﻿using API.Entities;
+﻿using System.Runtime.InteropServices;
+using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +11,17 @@ namespace API.Controllers;
 public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPhotoService _photoService;
 
-    public AdminController(UserManager<AppUser> userManager)
+    public AdminController(
+                    UserManager<AppUser> userManager,
+                    IUnitOfWork unitOfWork,
+                    IPhotoService photoService)
     {
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _photoService = photoService ?? throw new ArgumentNullException(nameof(photoService));
     }
     
     [Authorize(Policy = "RequireAdminRole")]
@@ -55,8 +64,70 @@ public class AdminController : BaseApiController
     
     [Authorize(Policy = "ModeratePhotoRole")]
     [HttpGet("photos-to-moderate")]
-    public ActionResult GetPhotosForModeration()
+    public async Task<ActionResult> GetPhotosForModeration()
     {
-        return Ok("Only moderators can see this");
+        var photos = await _unitOfWork.PhotoRepository.GetUnapprovedPhotos();
+        return Ok(photos);
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPost("approve-photo/{photoId}")]
+    public async Task<ActionResult> ApprovePhoto(Guid photoId)
+    {
+        //  Get photo by id
+        var photo = await _unitOfWork.PhotoRepository.GetPhotoById(photoId);
+        
+        //  If photo is not found, return not found
+        if (photo == null) return NotFound("Could not find photo");
+        
+        //  Approve photo
+        photo.IsApproved = true;
+
+        //  Get user by photo id
+        var user = await _unitOfWork.UserRepository.GetUserByPhotoId(photoId);
+        
+        //   If user has no main photo, set this photo as main
+        if (!user.Photos.Any(p => p.IsMain)) photo.IsMain = true;
+        
+        //  Save changes
+        await _unitOfWork.Complete();
+        
+        //  Return ok
+        return Ok();
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPost("reject-photo/{photoId}")]
+    public async Task<ActionResult> RejectPhoto(Guid photoId)
+    {
+        //  Get photo by id
+        var photo = await _unitOfWork.PhotoRepository.GetPhotoById(photoId);
+        
+        //  If photo is not found, return not found
+        if (photo == null) return NotFound("Could not find photo");
+        
+        //  Check if photo has public id
+        if (photo.PublicId != null)
+        {
+            //  Delete photo from cloudinary
+            var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+            
+            // If error, return bad request
+            if (result.Error != null) return BadRequest(result.Error.Message);
+            
+            //  Remove photo from database
+            if (result.Result == "ok") _unitOfWork.PhotoRepository.RemovePhoto(photo); 
+        }
+        else
+        {
+            //  Remove photo from database
+            _unitOfWork.PhotoRepository.RemovePhoto(photo);
+        }
+        
+        //  Save changes
+        await _unitOfWork.Complete();
+        
+        //  Return ok
+        return Ok();
     }
 }

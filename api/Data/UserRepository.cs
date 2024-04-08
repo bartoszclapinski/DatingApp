@@ -75,4 +75,12 @@ public class UserRepository : IUserRepository
                         .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                         .SingleOrDefaultAsync();
     }
+
+    public async Task<string> GetUserGender(string username)
+    {
+        return await _context.Users
+                        .Where(u => u.UserName == username)
+                        .Select(g => g.Gender)
+                        .FirstOrDefaultAsync();
+    }
 }

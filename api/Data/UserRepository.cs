@@ -66,14 +66,16 @@ public class UserRepository : IUserRepository
                         userParams.PageNumber, 
                         userParams.PageSize);
     }
-    
 
-    public async Task<MemberDto> GetMemberAsync(string userName)
+    public async Task<MemberDto> GetMemberAsync(string userName, bool isCurrentUser)
     {
-        return await _context.Users
+        var query = _context.Users
                         .Where(u => u.UserName == userName)
                         .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                        .SingleOrDefaultAsync();
+                        .AsQueryable();
+        if (isCurrentUser) query = query.IgnoreQueryFilters();
+        
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<string> GetUserGender(string username)
@@ -81,6 +83,15 @@ public class UserRepository : IUserRepository
         return await _context.Users
                         .Where(u => u.UserName == username)
                         .Select(g => g.Gender)
+                        .FirstOrDefaultAsync();
+    }
+
+    public async Task<AppUser> GetUserByPhotoId(Guid photoId)
+    {
+        return await _context.Users
+                        .Include(p => p.Photos)
+                        .IgnoreQueryFilters()
+                        .Where(u => u.Photos.Any(p => p.Id == photoId))
                         .FirstOrDefaultAsync();
     }
 }

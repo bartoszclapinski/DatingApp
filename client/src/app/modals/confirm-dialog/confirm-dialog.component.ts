@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import { BsModalRef } from "ngx-bootstrap/modal";
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {BsModalRef} from "ngx-bootstrap/modal";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.css']
